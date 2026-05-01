@@ -27,8 +27,9 @@ class GogoAnimeAdapter extends BaseAdapter {
             if (baseSlug.startsWith('/')) baseSlug = baseSlug.slice(1);
             
             let name = $(el).text() || '';
-            let type = 'both'; // Modern GogoAnime bundles both sub and dub on the main page via server tabs
+            let type = (name.toLowerCase().includes('dub') || baseSlug.endsWith('-dub')) ? 'dub' : 'sub';
             
+            // Note: Modern GogoAnime does NOT bundle sub and dub. They are separate URLs.
             if (!results.find(r => r.type === type)) {
               results.push({
                 providerId: this.id,
