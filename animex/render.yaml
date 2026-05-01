@@ -1,0 +1,43 @@
+# Render.com deployment config for AnimeX
+# Backend = Web Service, Frontend = Static Site (or separate Next.js service)
+
+services:
+  # ── BACKEND (Node.js API on Render) ───────────────────────────
+  - type: web
+    name: animex-backend
+    runtime: node
+    rootDir: animex/backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        sync: false        # Set this manually in Render dashboard
+      - key: JWT_SECRET
+        sync: false        # Set this manually in Render dashboard
+      - key: FRONTEND_URL
+        sync: false        # Your Vercel frontend URL
+      - key: SITE_URL
+        sync: false        # Your Vercel frontend URL
+
+  # ── FRONTEND (Next.js on Render) ──────────────────────────────
+  - type: web
+    name: animex-frontend
+    runtime: node
+    rootDir: animex/frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        sync: false        # Your Render backend URL + /api
+      - key: NEXT_PUBLIC_SITE_NAME
+        value: AnimeX
+      - key: NEXT_PUBLIC_DISQUS_SHORTNAME
+        sync: false        # Your Disqus shortname
+      - key: NEXT_PUBLIC_SITE_URL
+        sync: false        # Your frontend URL
