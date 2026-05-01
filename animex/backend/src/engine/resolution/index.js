@@ -48,9 +48,11 @@ class UniversalResolutionEngine {
     // Auto-heal if older than 7 days or if marked broken
     const isStale = mapping && (Date.now() - new Date(mapping.lastUpdated).getTime() > 7 * 24 * 60 * 60 * 1000);
     const isBroken = mapping && mapping.providers && mapping.providers.some(p => p.status === 'broken');
+    const hasLegacyGogo = mapping && mapping.providers && mapping.providers.some(p => p.providerId === 'gogoanime' && p.type === 'both');
     
-    if (!mapping || isStale || isBroken) {
+    if (!mapping || isStale || isBroken || hasLegacyGogo) {
       if (isBroken) console.log(`[Engine] Auto-healing broken mappings for Anime: ${metadata.title}`);
+      if (hasLegacyGogo) console.log(`[Engine] Auto-healing legacy gogoanime both-type mappings for Anime: ${metadata.title}`);
       console.log(`[Engine] Initiating discovery for Anime: ${metadata.title} (ID: ${jikanId})`);
       const discoveredProviders = await this.triggerDiscovery(metadata);
       
